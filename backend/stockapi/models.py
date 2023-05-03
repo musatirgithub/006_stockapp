@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -50,3 +51,20 @@ class Product(CreatedUpdated):
 
 
 class Purchase(CreatedUpdated):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    firm = models.ForeignKey(Firm, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    total_price = models.DecimalField(max_digits=7, decimal_places=2)
+
+
+class Sale(CreatedUpdated):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    firm = models.ForeignKey(Firm, on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    total_price = models.DecimalField(max_digits=7, decimal_places=2)
