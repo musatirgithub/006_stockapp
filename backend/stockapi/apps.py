@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class StockapiConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'stockapi'
+
+    def ready(self) -> None:
+        import stockapi.signals

@@ -57,7 +57,8 @@ class Purchase(CreatedUpdated):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    total_price = models.DecimalField(max_digits=7, decimal_places=2)
+    total_price = models.DecimalField(
+        max_digits=7, decimal_places=2, blank=True)
 
 
 class Sale(CreatedUpdated):
@@ -67,4 +68,5 @@ class Sale(CreatedUpdated):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    total_price = models.DecimalField(max_digits=7, decimal_places=2)
+    total_price = models.DecimalField(
+        max_digits=7, decimal_places=2, blank=True)
