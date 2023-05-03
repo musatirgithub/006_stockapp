@@ -49,6 +49,9 @@ class Product(CreatedUpdated):
         Brand, on_delete=models.CASCADE, related_name="products_brand")
     stock = models.PositiveSmallIntegerField(default=0)
 
+    def __str__(self) -> str:
+        return f"{self.brand} {self.name}"
+
 
 class Purchase(CreatedUpdated):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
