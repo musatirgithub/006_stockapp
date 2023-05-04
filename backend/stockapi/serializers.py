@@ -61,7 +61,6 @@ class SaleSerializer(serializers.ModelSerializer):
         model = Sale
         fields = (
             "id",
-            "name",
             "user",
             "user_id",
             "firm",
@@ -69,6 +68,7 @@ class SaleSerializer(serializers.ModelSerializer):
             "brand",
             "brand_id",
             "product",
+            "product_id",
             "quantity",
             "price",
             "total_price",
@@ -91,7 +91,6 @@ class PurchaseSerializer(serializers.ModelSerializer):
         model = Purchase
         fields = (
             "id",
-            "name",
             "user",
             "user_id",
             "firm",
@@ -99,6 +98,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
             "brand",
             "brand_id",
             "product",
+            "product_id",
             "quantity",
             "price",
             "total_price",
