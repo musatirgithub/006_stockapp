@@ -89,6 +89,19 @@ class SaleView(ModelViewSet):
 
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        #### Increase Product Stock In Case Of Sale Cancellation ########
+        item = Product.objects.get(id=instance.product_id)
+        item.stock += instance.quantity
+        item.save()
+        ##################################################################
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
 
 class PurchaseView(ModelViewSet):
     queryset = Purchase.objects.all()
@@ -130,3 +143,16 @@ class PurchaseView(ModelViewSet):
         self.perform_update(serializer)
 
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        #### Decrease Product Stock In Case Of Purchase Cancellation ########
+        item = Product.objects.get(id=instance.product_id)
+        item.stock -= instance.quantity
+        item.save()
+        ##################################################################
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_destroy(self, instance):
+        instance.delete()
