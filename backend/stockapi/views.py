@@ -38,6 +38,57 @@ class SaleView(ModelViewSet):
     serializer_class = SaleSerializer
     permission_classes = [DjangoModelPermissions]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.initial_data["user_id"] = self.request.user.id
+        serializer.is_valid(raise_exception=True)
+        ##################################################################
+        # serializer.validated_data["user_id"] = self.request.user.id
+        ##################################################################
+
+        ##################################################################
+        sale_quantity = int(request.data["quantity"])
+        item = Product.objects.get(id=int(request.data["product_id"]))
+        if item.stock - sale_quantity >= 0:
+            item.stock -= sale_quantity
+            item.save()
+        else:
+            data = {
+                "message": f"You have only {item.stock} {item.brand} {item.name}s."}
+            headers = self.get_success_headers(serializer.data)
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST, headers=headers)
+
+        ##################################################################
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        ##################################################################
+        new_quantity = int(request.data["quantity"])
+        old_quantity = instance.quantity
+        item = Product.objects.get(id=instance.product_id)
+        if item.stock - (new_quantity - old_quantity) >= 0:
+            item.stock -= new_quantity - old_quantity
+            item.save()
+        else:
+            data = {
+                "message": f"You don't have enough {item.brand.name} {item.name}"}
+            return Response(data=data)
+
+        ##################################################################
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
 
 class PurchaseView(ModelViewSet):
     queryset = Purchase.objects.all()

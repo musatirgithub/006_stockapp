@@ -65,7 +65,8 @@ class Purchase(CreatedUpdated):
 
 
 class Sale(CreatedUpdated):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True)
     firm = models.ForeignKey(Firm, on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
