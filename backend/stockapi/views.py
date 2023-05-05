@@ -59,3 +59,20 @@ class PurchaseView(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        #######################################################
+        new_amount = int(request.data["quantity"])
+        old_amount = instance.quantity
+        item = Product.objects.get(id=instance.product_id)
+        item.stock += new_amount - old_amount
+        item.save()
+        #######################################################
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
