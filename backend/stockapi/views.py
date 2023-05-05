@@ -97,13 +97,16 @@ class PurchaseView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        ################### Automatically Add User_Id ######################
+        serializer.initial_data["user_id"] = self.request.user.id
+        ####################################################################
         serializer.is_valid(raise_exception=True)
+        #################### Update Product Stock ##########################
         purchase = request.data
-        print(purchase)
         item = Product.objects.get(id=purchase["product_id"])
-        print(item)
         item.stock += purchase["quantity"]
         item.save()
+        ####################################################################
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
