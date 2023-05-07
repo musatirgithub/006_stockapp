@@ -91,7 +91,7 @@ class SaleView(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        #### Increase Product Stock In Case Of Sale Cancellation ########
+        #### Increase Product Stock In Case Of Sale Cancellation #########
         item = Product.objects.get(id=instance.product_id)
         item.stock += instance.quantity
         item.save()
