@@ -150,7 +150,7 @@ class PurchaseView(ModelViewSet):
         item = Product.objects.get(id=instance.product_id)
         item.stock -= instance.quantity
         item.save()
-        ##################################################################
+        #####################################################################
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
